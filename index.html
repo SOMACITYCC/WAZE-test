@@ -55,7 +55,7 @@ textarea{min-height:140px;resize:vertical}label{font-weight:700;font-size:15px}
 <main id="app" aria-live="polite"></main>
 <script>
 /* ---- CONFIG: set ENDPOINT to your serverless function that writes to Planning Center. Leave '' for preview mode. ---- */
-var CONFIG={CHURCH:"Soma City Church",ENDPOINT:"/.netlify/functions/submit"};
+var CONFIG={CHURCH:"Soma City Church",ENDPOINT:"https://script.google.com/macros/s/AKfycbzUHGDIe1oCTCqlYcaPp8j7HzGxXtHxNAPfS858MtMIXuKIeDNFOQxWZkqx3xVMJC_Y1A/exec"};
 
 var QS=[
 ["Risk","What's your relationship to risk?","Risk paralyzes you. You won't take it.","You embrace risk easily."],
@@ -114,7 +114,7 @@ function submit(){var n=document.getElementById("nm").value.trim(),e=document.ge
  var r=score(),p={church:CONFIG.CHURCH,name:n,email:e,type:TYPES[r.i].n,tendency:r.t!==null?TYPES[r.t].n:null,wavelength:r.avg,answers:S.a,gutCheck:S.gut,reflections:OPEN.map(function(q,i){return{question:q[0],answer:S.open[i]}}),submittedAt:new Date().toISOString()};
  if(!CONFIG.ENDPOINT){S.err="";S.step=17;return render()}
  var b=document.getElementById("sub");b.disabled=true;b.textContent="Calculating your results";
- fetch(CONFIG.ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)}).then(function(x){if(!x.ok)throw 0;S.err="";S.step=17;render()}).catch(function(){S.err="Couldn't submit. Check your connection and try again.";render()})}
+ fetch(CONFIG.ENDPOINT,{method:"POST",body:JSON.stringify(p)}).then(function(x){return x.json()}).then(function(j){if(!j.ok)throw 0;S.err="";S.step=17;render()}).catch(function(){S.err="Couldn't submit. Check your connection and try again.";render()})}
 app.addEventListener("click",function(ev){var t=ev.target.closest("button");if(!t)return;var d=t.dataset;
  if(d.go){S.step=+d.go;render()}
  else if(d.q){S.a[S.step-2]=+d.q;render()}
